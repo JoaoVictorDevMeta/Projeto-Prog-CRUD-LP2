@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <string.h>
 
@@ -5,11 +6,17 @@ class Engine{
     private:
         std::string nome;
         std::string linguagemBase;
-        std::string autoria;
     public:
-        Engine(std::string nome, std::string linguagemBase, std::string autoria){
+        Engine(std::string nome, std::string linguagemBase){
             this->nome = nome;
             this->linguagemBase = linguagemBase;
-            this->autoria = autoria;
+        }
+
+        std::string getNome(){
+            return nome;
+        }
+
+        std::string getLinguagemBase(){
+            return linguagemBase;
         }
 };

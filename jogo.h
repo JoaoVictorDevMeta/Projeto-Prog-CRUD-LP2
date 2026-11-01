@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <string> // Corrigido
+#include <string>
 #include "engine.h"
 #include "desenvolvedor.h"
 
@@ -12,11 +12,14 @@ class Jogo {
         int anoLancamento;
         Engine eng;
         Desenvolvedor dev;
+        int copiasVendidas;
 
     public:
         Jogo(int id, std::string titulo, float precoBase, int ano, Engine eng, Desenvolvedor dev) 
             : id(id), titulo(titulo), precoBase(precoBase), anoLancamento(ano), eng(eng), dev(dev) 
-        {}
+        {
+            copiasVendidas = 0;
+        }
 
         virtual ~Jogo() {}
 

@@ -33,7 +33,7 @@ class VaporStudio {
             std::cout << "Inserir Jogo" << std::endl;
             std::cout << traco << std::endl;
 
-            int id = 0;
+            int id = Jogo::qtdJogosTotal;
 
             std::cout << "Nome do jogo: ";
             std::cin.ignore();
@@ -142,5 +142,112 @@ class VaporStudio {
             }
         }
 
+        int pesquisar(std::string titulo) {
+            std::vector<int> indicesEncontrados;
 
+            for(size_t i = 0; i < catalogoJogos.size(); i++){
+                if(catalogoJogos[i]->getTitulo().find(titulo) != std::string::npos){
+                    indicesEncontrados.push_back(i);        
+                }
+            }
+
+            if (indicesEncontrados.empty()) return -1;
+
+            if (indicesEncontrados.size() == 1) {
+                return indicesEncontrados[0];
+            }
+
+            std::cout << "Múltiplos jogos encontrados:\n";
+            for (int idx : indicesEncontrados) {
+                std::cout << "[" << idx << "] " << catalogoJogos[idx]->getTitulo() << "\n";
+            }
+            
+            int escolha;
+            std::cout << "Digite o índice desejado: ";
+            std::cin >> escolha;
+            return escolha;
+        }
+
+        void alterarJogo(){
+            std::cout << traco << std::endl;
+            std::cout << "Editar Jogo" << std::endl;
+            std::cout << traco << std::endl;
+
+            std::cout << "Digite o nome do jogo que\n deseja editar\n"; 
+            std::cin.ignore();
+            std::string nomeP;
+            std::getline(std::cin, nomeP);
+
+            int idJogo;
+            idJogo = pesquisar(nomeP);
+            if (idJogo == -1) {
+                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                return; 
+            }
+            if (std::cin.peek() == '\n') std::cin.ignore();
+
+            std::cout << traco << std::endl;
+            std::cout << "Editando o seguinte jogo:" << std::endl;
+            catalogoJogos[idJogo]->exibirInfo();
+            std::cout << traco << std::endl;
+
+            std::string entrada;
+
+            std::cout << "Nome do jogo [" << catalogoJogos[idJogo]->getTitulo() << "]: ";
+            std::getline(std::cin, entrada);
+            if (!entrada.empty()) {
+                catalogoJogos[idJogo]->setTitulo(entrada);
+            }
+
+            std::cout << "Preço Base [" << catalogoJogos[idJogo]->getPrecoBase() << "]: ";
+            std::getline(std::cin, entrada);
+            if (!entrada.empty()) {
+                catalogoJogos[idJogo]->setPrecoBase(std::stof(entrada));
+            }
+
+            std::cout << "Ano de Lançamento [" << catalogoJogos[idJogo]->getAnoLancamento() << "]: ";
+            std::getline(std::cin, entrada);
+            if (!entrada.empty()) {
+                catalogoJogos[idJogo]->setAnoLancamento(std::stoi(entrada));
+            }
+
+            std::cout << "\nJogo atualizado com sucesso!\n";
+            std::cout << traco << std::endl;
+            catalogoJogos[idJogo]->exibirInfo();
+        }
+
+        void removerJogo() {
+            std::cout << traco << std::endl;
+            std::cout << "Deletar Jogo" << std::endl;
+            std::cout << traco << std::endl;
+
+            std::cout << "Digite o nome do jogo que\n deseja deletar\n"; 
+            std::cin.ignore();
+            std::string nomeP;
+            std::getline(std::cin, nomeP);
+
+            int idJogo;
+            idJogo = pesquisar(nomeP);
+            if (idJogo == -1) {
+                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                return; 
+            }
+
+            std::cout << traco << std::endl;
+            std::cout << "Jogo selecionado para remoção: " << std::endl;
+            catalogoJogos[idJogo]->exibirInfo();
+            std::cout << traco << std::endl;
+
+            std::cout << "Tem a certeza absoluta que deseja remover este jogo? (1 - Sim / 0 - Nao): ";
+            int confirmacao;
+            std::cin >> confirmacao;
+            
+            if(confirmacao){
+                delete catalogoJogos[idJogo];
+                catalogoJogos.erase(catalogoJogos.begin() + idJogo);
+                std::cout << "\nJogo removido com sucesso!\n";
+            }else{
+                std::cout << "\nOperação cancela\n";
+            }
+        }
 };

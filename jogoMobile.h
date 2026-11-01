@@ -8,7 +8,7 @@ class JogoMobile : public Jogo {
         bool possuiAnuncios;
     public:
         JogoMobile(int id, std::string titulo, float precoBase, int ano, Engine eng, Desenvolvedor dev
-        , bool anun, int qtd) 
+        , bool anun) 
         : Jogo(id, titulo, precoBase, ano, eng, dev) {
             this->possuiAnuncios = anun;
         }

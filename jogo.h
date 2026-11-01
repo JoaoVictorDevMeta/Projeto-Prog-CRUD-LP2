@@ -15,10 +15,15 @@ class Jogo {
         int copiasVendidas;
 
     public:
+        static int qtdJogosTotal;
+        static int downloadsTotais;
+        static float ganhosTotais;
+
         Jogo(int id, std::string titulo, float precoBase, int ano, Engine eng, Desenvolvedor dev) 
             : id(id), titulo(titulo), precoBase(precoBase), anoLancamento(ano), eng(eng), dev(dev) 
         {
             copiasVendidas = 0;
+            qtdJogosTotal++;
         }
 
         virtual ~Jogo() {}
@@ -70,3 +75,7 @@ class Jogo {
             return precoBase; 
         }
 };
+
+int Jogo::qtdJogosTotal = 0;
+int Jogo::downloadsTotais = 0;
+float Jogo::ganhosTotais = 0.0f;

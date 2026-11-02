@@ -19,8 +19,17 @@ class VaporStudio {
     
     public:
         void menu(){
+            system("cls");
+            std::cout << "\n";
+            std::cout << "  ##    ##  ######  ######   ######   ######  \n";
+            std::cout << "  ##    ## ##    ## ##   ## ##    ## ##    ## \n";
+            std::cout << "  ##    ## ######## ##   ## ##    ## ##    ## \n";
+            std::cout << "   ##  ##  ##    ## ######  ##    ## ######   \n";
+            std::cout << "    ## ##  ##    ## ##      ##    ## ##   ##  \n";
+            std::cout << "     ###   ##    ## ##       ######  ##    ## \n";
+            std::cout << "                  S T U D I O\n\n";
             std::cout << traco << std::endl;
-            std::cout << "Menu" << std::endl;
+            std::cout << "MENU PRINCIPAL" << std::endl;
             std::cout << traco << std::endl;
             std::cout << "Digite o número para executar sua operação" << std::endl;
             
@@ -36,6 +45,7 @@ class VaporStudio {
         }   
 
         void inserirJogo(){
+            system("cls");
             std::cout << traco << std::endl;
             std::cout << "Inserir Jogo" << std::endl;
             std::cout << traco << std::endl;
@@ -131,9 +141,11 @@ class VaporStudio {
             }
 
             std::cout << "\nJogo cadastrado com sucesso!\n";
+            system("pause");
         }   
 
         void listarJogos(){
+            system("cls");
             std::cout << traco << std::endl;
             std::cout << "Listando Jogos (" << Jogo::qtdJogosTotal <<  ")" << std::endl;
             std::cout << traco << std::endl;
@@ -147,6 +159,7 @@ class VaporStudio {
                 catalogoJogos[i]->exibirInfo();
                 std::cout << std::endl;
             }
+            system("pause");
         }
 
         int pesquisar(std::string titulo) {
@@ -176,6 +189,7 @@ class VaporStudio {
         }
 
         void exibirUmJogo() {
+            system("cls");
             std::cout << traco << std::endl;
             std::cout << "Exibir Detalhes do Jogo" << std::endl;
             std::cout << "Digite o nome do jogo: ";
@@ -190,6 +204,7 @@ class VaporStudio {
             } else {
                 std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
             }
+            system("pause");
         }
 
         void alterarJogo(){
@@ -197,7 +212,7 @@ class VaporStudio {
             std::cout << "Editar Jogo" << std::endl;
             std::cout << traco << std::endl;
 
-            std::cout << "Digite o nome do jogo que\n deseja editar\n"; 
+            std::cout << "Digite o nome do jogo que \ndeseja editar.\n"; 
             std::cin.ignore();
             std::string nomeP;
             std::getline(std::cin, nomeP);
@@ -208,7 +223,6 @@ class VaporStudio {
                 std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
                 return; 
             }
-            if (std::cin.peek() == '\n') std::cin.ignore();
 
             std::cout << traco << std::endl;
             std::cout << "Editando o seguinte jogo:" << std::endl;
@@ -238,6 +252,7 @@ class VaporStudio {
             std::cout << "\nJogo atualizado com sucesso!\n";
             std::cout << traco << std::endl;
             catalogoJogos[idJogo]->exibirInfo();
+            system("pause");
         }
 
         void removerJogo() {
@@ -273,6 +288,7 @@ class VaporStudio {
             }else{
                 std::cout << "\nOperação cancela\n";
             }
+            system("pause");
         }
 
         void vender(){
@@ -307,9 +323,11 @@ class VaporStudio {
             std::cout << "Venda realizada! Jogo: " << jogoVendido->getTitulo() 
             << " | Quantidade: " << qtd 
             << " | Total: R$ " << valorTotalDaVenda << std::endl;
+            system("pause");
         }
 
         void gerarRelatorio() {
+            system("cls");
             std::cout << traco << std::endl;
             std::cout << "Relatório Geral - VaporStudio" << std::endl;
             std::cout << traco << std::endl;
@@ -352,6 +370,7 @@ class VaporStudio {
             std::cout << "Jogos Indie: " << qtdIndie << std::endl;
             std::cout << "Jogos Mobile: " << qtdMobile << std::endl;
             std::cout << traco << std::endl;
+            system("pause");
         }
 
         void salvarArquivo () {
@@ -406,10 +425,9 @@ class VaporStudio {
                     
                     lista << mobile->getPossuiAnuncios() << "\n";
                 }
-
-                lista.close();
-                std::cout << "Dados guardados com sucesso no lista 'dados.txt'.\n";
             }
+            lista.close();
+            std::cout << "Dados guardados com sucesso no lista 'dados.txt'.\n";
         }
 
         void carregarArquivo(){

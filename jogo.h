@@ -74,6 +74,7 @@ class Jogo {
 
         virtual void exibirInfo() {
             std::cout << "ID: " << id << " | " << titulo << " (" << anoLancamento << ")" << std::endl;
+            std::cout << "Preço Base: R$ " << precoBase << " | Vendas: " << copiasVendidas << std::endl;
             std::cout << "Desenvolvedora: " << dev.getNome() << " | Engine: " << eng.getNome() << std::endl;
         }
 

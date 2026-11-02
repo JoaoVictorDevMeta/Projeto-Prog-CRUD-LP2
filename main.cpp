@@ -52,6 +52,7 @@ int main() {
             break;
         default: 
             std::cout << "Opção inválida! Tente novamente.\n";
+            system("pause");
         }
     }
 

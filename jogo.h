@@ -46,6 +46,9 @@ class Jogo {
         Desenvolvedor getDev() { 
             return dev; 
         }  
+        int getCopiasVendidas(){
+            return copiasVendidas;;
+        }
 
         void setId(int id) { 
             this->id = id; 
@@ -64,6 +67,9 @@ class Jogo {
         }
         void setDev(Desenvolvedor d) { 
             dev = d; 
+        }
+        void adicionarCopiasVendidas(int q){
+            copiasVendidas += q;
         }
 
         virtual void exibirInfo() {

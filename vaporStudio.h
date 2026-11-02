@@ -3,6 +3,7 @@
 #include <string> 
 #include <cstdlib>
 #include <vector>
+#include <fstream>
 #include "engine.h"
 #include "desenvolvedor.h"
 #include "jogo.h"
@@ -25,7 +26,12 @@ class VaporStudio {
             
 
             std::cout << "0 - Sair" << std::endl;
-
+            std::cout << "1 - Cadastrar jogo" << std::endl;
+            std::cout << "2 - Listar jogos" << std::endl;
+            std::cout << "3 - Editar jogo" << std::endl;
+            std::cout << "4 - Remover jogo" << std::endl;
+            std::cout << "5 - Vender jogo" << std::endl;
+            std::cout << "6 - Gerar relatório atual" << std::endl;
         }   
 
         void inserirJogo(){
@@ -168,6 +174,23 @@ class VaporStudio {
             return escolha;
         }
 
+        void exibirUmJogo() {
+            std::cout << traco << std::endl;
+            std::cout << "Exibir Detalhes do Jogo" << std::endl;
+            std::cout << "Digite o nome do jogo: ";
+            std::string nomeP;
+            std::getline(std::cin >> std::ws, nomeP);
+
+            int idJogo = pesquisar(nomeP);
+            if (idJogo != -1) {
+                std::cout << traco << std::endl;
+                catalogoJogos[idJogo]->exibirInfo();
+                std::cout << traco << std::endl;
+            } else {
+                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+            }
+        }
+
         void alterarJogo(){
             std::cout << traco << std::endl;
             std::cout << "Editar Jogo" << std::endl;
@@ -249,5 +272,209 @@ class VaporStudio {
             }else{
                 std::cout << "\nOperação cancela\n";
             }
+        }
+
+        void vender(){
+            std::cout << traco << std::endl;
+            std::cout << "Vender Jogo" << std::endl;
+            std::cout << traco << std::endl;
+
+            std::cout << "Digite o nome do jogo que\n deseja vender\n"; 
+            std::cin.ignore();
+            std::string nomeP;
+            std::getline(std::cin, nomeP);
+
+            int indexVetor = pesquisar(nomeP);
+            
+            if (indexVetor == -1) {
+                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                return; 
+            }
+
+            std::cout << "\nQuantidade da venda: \n";
+            int qtd;
+            std::cin >> qtd;
+
+            Jogo* jogoVendido = catalogoJogos[indexVetor];
+
+            Jogo* jogoVendido = catalogoJogos[indexVetor];
+            
+            float precoUnitario = jogoVendido->calcularPrecoFinal();
+            float valorTotalDaVenda = precoUnitario * qtd;
+            
+            Jogo::ganhosTotais += valorTotalDaVenda;
+            jogoVendido->adicionarCopiasVendidas(qtd);
+
+            std::cout << "Venda realizada! Jogo: " << jogoVendido->getTitulo() 
+            << " | Quantidade: " << qtd 
+            << " | Total: R$ " << valorTotalDaVenda << std::endl;
+        }
+
+        void gerarRelatorio() {
+            std::cout << traco << std::endl;
+            std::cout << "Relatório Geral - VaporStudio" << std::endl;
+            std::cout << traco << std::endl;
+
+            std::cout << "Total de Jogos Cadastrados no Catálogo: " << catalogoJogos.size() << std::endl;
+            std::cout << "Faturamento Total (Vendas): R$ " << Jogo::ganhosTotais << std::endl;
+
+            if (catalogoJogos.empty()) {
+                std::cout << "\nO catálogo está vazio. Não há mais dados para gerar.\n";
+                std::cout << traco << std::endl;
+                return;
+            }
+
+            float valorTotalBaseCatalogo = 0.0f;
+            int totalCopias = 0;
+            int qtdAAA = 0;
+            int qtdIndie = 0;
+            int qtdMobile = 0;
+
+            for (Jogo* j : catalogoJogos) {
+                valorTotalBaseCatalogo += j->getPrecoBase();
+                totalCopias += j->getCopiasVendidas();
+
+                if (dynamic_cast<JogoAAA*>(j) != nullptr) {
+                    qtdAAA++;
+                } 
+                else if (dynamic_cast<JogoIndie*>(j) != nullptr) {
+                    qtdIndie++;
+                } 
+                else if (dynamic_cast<JogoMobile*>(j) != nullptr) {
+                    qtdMobile++;
+                }
+            }
+
+            std::cout << "Soma do Preço Base de todos os jogos: R$ " << valorTotalBaseCatalogo << std::endl;
+            std::cout << "Total de Cópias Vendidas (Volume): " << totalCopias << std::endl;
+            
+            std::cout << "\n--- Distribuição do Catálogo ---" << std::endl;
+            std::cout << "Jogos AAA: " << qtdAAA << std::endl;
+            std::cout << "Jogos Indie: " << qtdIndie << std::endl;
+            std::cout << "Jogos Mobile: " << qtdMobile << std::endl;
+            std::cout << traco << std::endl;
+        }
+
+        void salvarArquivo () {
+            std::ofstream lista("dados.txt");
+
+            if (!lista.is_open()) {
+                std::cout << "Erro ao abrir o lista para guardar os dados!\n";
+                return;
+            }
+
+            lista << Jogo::ganhosTotais << "\n";
+            lista << Jogo::downloadsTotais << "\n";
+
+            for (Jogo* j : catalogoJogos) {
+                if (JogoAAA* aaa = dynamic_cast<JogoAAA*>(j)) {
+                    lista << "AAA\n";
+                    lista << aaa->getId() << "\n";
+                    lista << aaa->getTitulo() << "\n";
+                    lista << aaa->getPrecoBase() << "\n";
+                    lista << aaa->getAnoLancamento() << "\n";
+                    lista << aaa->getEng().getNome() << "\n";
+                    lista << aaa->getEng().getLinguagemBase() << "\n";
+                    lista << aaa->getDev().getNome() << "\n";
+                    lista << aaa->getDev().getPaisOrigem() << "\n";
+                    
+                    lista << aaa->getOrcamentoMarketing() << "\n";
+                    lista << aaa->getQtdEstudios() << "\n";
+                }
+                else if (JogoIndie* indie = dynamic_cast<JogoIndie*>(j)) {
+                    lista << "INDIE\n";
+                    lista << aaa->getId() << "\n";
+                    lista << aaa->getTitulo() << "\n";
+                    lista << aaa->getPrecoBase() << "\n";
+                    lista << aaa->getAnoLancamento() << "\n";
+                    lista << aaa->getEng().getNome() << "\n";
+                    lista << aaa->getEng().getLinguagemBase() << "\n";
+                    lista << aaa->getDev().getNome() << "\n";
+                    lista << aaa->getDev().getPaisOrigem() << "\n";
+
+                    lista << indie->getNomeDesenvolvedor() << "\n";
+                    lista << indie->getTemPublisher() << "\n";
+                }else if (JogoMobile* mobile = dynamic_cast<JogoMobile*>(j)) {
+                    lista << "MOBILE\n";
+                    lista << aaa->getId() << "\n";
+                    lista << aaa->getTitulo() << "\n";
+                    lista << aaa->getPrecoBase() << "\n";
+                    lista << aaa->getAnoLancamento() << "\n";
+                    lista << aaa->getEng().getNome() << "\n";
+                    lista << aaa->getEng().getLinguagemBase() << "\n";
+                    lista << aaa->getDev().getNome() << "\n";
+                    lista << aaa->getDev().getPaisOrigem() << "\n";
+                    
+                    lista << mobile->getPossuiAnuncios() << "\n";
+                }
+
+                lista.close();
+                std::cout << "Dados guardados com sucesso no lista 'dados.txt'.\n";
+            }
+        }
+
+        void carregarArquivo(){
+            std::ifstream lista("dados.txt");
+
+            if (!lista.is_open()) {
+                return; 
+            }
+
+            std::string linha;
+
+            if (std::getline(lista, linha)) {
+                Jogo::ganhosTotais = std::stof(linha);
+            }
+            if (std::getline(lista, linha)) {
+                Jogo::downloadsTotais = std::stof(linha);
+            }
+
+            while (std::getline(lista, linha)) {
+                if (linha == "AAA" || linha == "INDIE" || linha == "MOBILE") {
+                    std::string idStr, titulo, precoStr, anoStr;
+                    std::string nomeEng, langEng, nomeDev, paisDev;
+
+                    std::getline(lista, idStr);
+                    std::getline(lista, titulo);
+                    std::getline(lista, precoStr);
+                    std::getline(lista, anoStr);
+                    std::getline(lista, nomeEng);
+                    std::getline(lista, langEng);
+                    std::getline(lista, nomeDev);
+                    std::getline(lista, paisDev);
+
+                    int id = std::stoi(idStr);
+                    float preco = std::stof(precoStr);
+                    int ano = std::stoi(anoStr);
+
+                    Engine eng(nomeEng, langEng);
+                    Desenvolvedor dev(nomeDev, paisDev);
+
+                    if (linha == "AAA") {
+                        std::string orcamentoStr, qtdEstudiosStr;
+                        std::getline(lista, orcamentoStr);
+                        std::getline(lista, qtdEstudiosStr);
+                        
+                        catalogoJogos.push_back(new JogoAAA(id, titulo, preco, ano, eng, dev, 
+                            std::stof(orcamentoStr), std::stoi(qtdEstudiosStr)));
+                    } else if (linha == "INDIE") {
+                        std::string nomeDevPrincipal, publisherStr;
+                        std::getline(lista, nomeDevPrincipal);
+                        std::getline(lista, publisherStr);
+                        
+                        catalogoJogos.push_back(new JogoIndie(id, titulo, preco, ano, eng, dev, 
+                            nomeDevPrincipal, std::stoi(publisherStr)));
+                    } else if (linha == "MOBILE") {
+                        std::string anunciosStr;
+                        std::getline(lista, anunciosStr);
+                        
+                        catalogoJogos.push_back(new JogoMobile(id, titulo, preco, ano, eng, dev, 
+                            std::stoi(anunciosStr)));
+                    }
+                }
+            }
+
+            lista.close();
+            std::cout << "Dados carregados com sucesso do ficheiro.\n";
         }
 };

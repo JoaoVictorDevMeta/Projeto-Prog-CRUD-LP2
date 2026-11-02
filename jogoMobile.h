@@ -21,4 +21,8 @@ class JogoMobile : public Jogo {
                 //return (copiasVendidas > 100) ? precoBase * 0.5f : precoBase;
             }
         }
+
+        bool getPossuiAnuncios(){
+            return possuiAnuncios;
+        }
 };

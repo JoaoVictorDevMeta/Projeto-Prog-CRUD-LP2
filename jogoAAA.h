@@ -32,4 +32,12 @@ public:
         std::cout << "Tipo: AAA | Estúdios: " << qtdEstudios << " | Marketing: R$ " << orcamentoMarketing << std::endl;
         std::cout << "Preço Final: R$ " << calcularPrecoFinal() << std::endl << "-----------------------" << std::endl;
     }
+
+    float getOrcamentoMarketing(){
+        return orcamentoMarketing;
+    }
+
+    int getQtdEstudios(){
+        return qtdEstudios;
+    }
 };

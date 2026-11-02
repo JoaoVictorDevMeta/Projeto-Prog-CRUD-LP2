@@ -25,4 +25,12 @@ class JogoIndie : public Jogo {
             }
             return preco;
         }
+
+        std::string getNomeDesenvolvedor(){
+            return nomeDesenvolvedor;
+        }
+
+        bool getTemPublisher(){
+            return temPublisher; 
+        }
 };

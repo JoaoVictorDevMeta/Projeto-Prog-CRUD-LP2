@@ -1,16 +1,2 @@
-VAPORstudio:
-
-um gamedev studio que faz gerencia de jogos adicionados na biblioteca de acordo com seu tipo e financiamento.
-
-notas para cada classe de tipo de jogo:
-
-Jogo AAA:
-- são títulos de grande porte produzidos com orçamentos milionários e por grandes estúdios.
-- Jogos AAA perdem valor com o tempo, mas o marketing infla o preço de lançamento.
-
-Jogo Indie:
-- é um título desenvolvido por uma pessoa ou pequena equipe, geralmente sem financiamento ou apoio de grandes publicadoras, muitos possuem histórias e idéias únicas.
-- Se o jogo tem publisher, ele repassa o custo ao consumidor. Se viraliza, ganha um leve desconto para manter o impulso.
-
-Jogo Mobile:
-- Jogos mobile ou são grátis (sustentados por anúncios) ou pagos (sem anúncios).
+0
+0

@@ -32,6 +32,7 @@ class VaporStudio {
             std::cout << "4 - Remover jogo" << std::endl;
             std::cout << "5 - Vender jogo" << std::endl;
             std::cout << "6 - Gerar relatório atual" << std::endl;
+            std::cout << "7 - Mostrar informações de um jogo" << std::endl;
         }   
 
         void inserirJogo(){
@@ -296,8 +297,6 @@ class VaporStudio {
             std::cin >> qtd;
 
             Jogo* jogoVendido = catalogoJogos[indexVetor];
-
-            Jogo* jogoVendido = catalogoJogos[indexVetor];
             
             float precoUnitario = jogoVendido->calcularPrecoFinal();
             float valorTotalDaVenda = precoUnitario * qtd;
@@ -383,27 +382,27 @@ class VaporStudio {
                 }
                 else if (JogoIndie* indie = dynamic_cast<JogoIndie*>(j)) {
                     lista << "INDIE\n";
-                    lista << aaa->getId() << "\n";
-                    lista << aaa->getTitulo() << "\n";
-                    lista << aaa->getPrecoBase() << "\n";
-                    lista << aaa->getAnoLancamento() << "\n";
-                    lista << aaa->getEng().getNome() << "\n";
-                    lista << aaa->getEng().getLinguagemBase() << "\n";
-                    lista << aaa->getDev().getNome() << "\n";
-                    lista << aaa->getDev().getPaisOrigem() << "\n";
+                    lista << indie->getId() << "\n";
+                    lista << indie->getTitulo() << "\n";
+                    lista << indie->getPrecoBase() << "\n";
+                    lista << indie->getAnoLancamento() << "\n";
+                    lista << indie->getEng().getNome() << "\n";
+                    lista << indie->getEng().getLinguagemBase() << "\n";
+                    lista << indie->getDev().getNome() << "\n";
+                    lista << indie->getDev().getPaisOrigem() << "\n";
 
                     lista << indie->getNomeDesenvolvedor() << "\n";
                     lista << indie->getTemPublisher() << "\n";
                 }else if (JogoMobile* mobile = dynamic_cast<JogoMobile*>(j)) {
                     lista << "MOBILE\n";
-                    lista << aaa->getId() << "\n";
-                    lista << aaa->getTitulo() << "\n";
-                    lista << aaa->getPrecoBase() << "\n";
-                    lista << aaa->getAnoLancamento() << "\n";
-                    lista << aaa->getEng().getNome() << "\n";
-                    lista << aaa->getEng().getLinguagemBase() << "\n";
-                    lista << aaa->getDev().getNome() << "\n";
-                    lista << aaa->getDev().getPaisOrigem() << "\n";
+                    lista << mobile->getId() << "\n";
+                    lista << mobile->getTitulo() << "\n";
+                    lista << mobile->getPrecoBase() << "\n";
+                    lista << mobile->getAnoLancamento() << "\n";
+                    lista << mobile->getEng().getNome() << "\n";
+                    lista << mobile->getEng().getLinguagemBase() << "\n";
+                    lista << mobile->getDev().getNome() << "\n";
+                    lista << mobile->getDev().getPaisOrigem() << "\n";
                     
                     lista << mobile->getPossuiAnuncios() << "\n";
                 }

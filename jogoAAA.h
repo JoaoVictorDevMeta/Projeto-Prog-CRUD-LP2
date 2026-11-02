@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include "jogo.h"
 
@@ -30,7 +31,7 @@ public:
     void exibirInfo() {
         Jogo::exibirInfo(); 
         std::cout << "Tipo: AAA | Estúdios: " << qtdEstudios << " | Marketing: R$ " << orcamentoMarketing << std::endl;
-        std::cout << "Preço Final: R$ " << calcularPrecoFinal() << std::endl << "-----------------------" << std::endl;
+        std::cout << "Preço Final: R$ " << std::fixed << std::setprecision(2) << calcularPrecoFinal() << std::endl << "-----------------------" << std::endl;
     }
 
     float getOrcamentoMarketing(){

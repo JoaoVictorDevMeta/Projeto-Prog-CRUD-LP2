@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <iomanip>
 #include "jogo.h"
 
 class JogoIndie : public Jogo {
@@ -24,6 +25,12 @@ class JogoIndie : public Jogo {
                 preco *= 0.85;
             }
             return preco;
+        }
+
+        void exibirInfo() {
+            Jogo::exibirInfo(); 
+            std::cout << "Tipo: Indie | Desenvolvedor Principal: " << nomeDesenvolvedor << std::endl;
+            std::cout << "Preço Final: R$ " << std::fixed << std::setprecision(2) << calcularPrecoFinal() << std::endl << "-----------------------" << std::endl;
         }
 
         std::string getNomeDesenvolvedor(){

@@ -11,3 +11,67 @@ Mojang
 Suecia
 2500
 1
+AAA
+1
+The Witcher 3: Wild Hunt
+129.99
+2015
+REDengine
+C++
+CD Projekt Red
+Pol¢nia
+3.5e+007
+1
+AAA
+2
+CyberPunk 2077
+199.9
+2020
+REDengine
+4
+CD Projekt Red
+Pol¢nia
+1.5e+008
+3
+INDIE
+3
+Hollow Knight
+46.99
+2017
+Unity
+C#
+Team Cherry
+Austr lia
+Ari Gibson
+0
+INDIE
+4
+Stardew Valley
+24.99
+2016
+XNA
+C#
+ConcernedApe
+Estados Unidos
+Eric Barone
+1
+MOBILE
+5
+Genshin Impact
+0
+2020
+Unity
+C#
+miHoYo
+China
+0
+MOBILE
+6
+Candy Crush Saga
+0
+2012
+Defold
+C++
+King
+Su‚cia
+1

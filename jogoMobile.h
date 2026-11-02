@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <iomanip>
 #include "jogo.h"
 
 class JogoMobile : public Jogo {
@@ -20,6 +21,12 @@ class JogoMobile : public Jogo {
                 //sugestão de precificação baseado na quantidade de downloads
                 //return (copiasVendidas > 100) ? precoBase * 0.5f : precoBase;
             }
+        }
+
+        void exibirInfo() {
+            Jogo::exibirInfo(); 
+            std::cout << "Tipo: Mobile | "<< (possuiAnuncios? "Gratuito com anúncios" : "Jogo pago") << std::endl;
+            std::cout << "-----------------------" << std::endl;
         }
 
         bool getPossuiAnuncios(){

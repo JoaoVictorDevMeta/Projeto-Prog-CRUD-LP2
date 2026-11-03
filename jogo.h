@@ -5,14 +5,20 @@
 #include "desenvolvedor.h"
 
 class Jogo {
-    protected: 
-        int id;
-        std::string titulo;
-        float precoBase;
-        int anoLancamento;
-        Engine eng;
-        Desenvolvedor dev;
-        int copiasVendidas;
+    private:
+    int id;
+    std::string titulo;
+
+    protected:
+    float precoBase;
+    int anoLancamento;
+
+    private:
+    Engine eng;
+    Desenvolvedor dev;
+
+    protected:
+    int copiasVendidas;
 
     public:
         static int qtdJogosTotal;

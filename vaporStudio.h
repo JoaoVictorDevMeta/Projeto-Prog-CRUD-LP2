@@ -1,10 +1,8 @@
-#pragma once
 #include <iostream>
 #include <string> 
 #include <cstdlib>
 #include <vector>
 #include <fstream>
-#include <cmath>
 #include <limits>
 #include <sstream>
 #include <stdexcept>
@@ -34,8 +32,7 @@ class VaporStudio {
             std::istringstream stream(entrada);
             int valorLido;
             if (!(stream >> valorLido)) return false;
-            stream >> std::ws;
-            if (!stream.eof() || valorLido < minimo || valorLido > maximo) return false;
+            if (valorLido < minimo || valorLido > maximo) return false;
             valor = valorLido;
             return true;
         }
@@ -44,8 +41,7 @@ class VaporStudio {
             std::istringstream stream(entrada);
             float valorLido;
             if (!(stream >> valorLido)) return false;
-            stream >> std::ws;
-            if (!stream.eof() || !std::isfinite(valorLido) || valorLido < minimo) return false;
+            if (valorLido < minimo) return false;
             valor = valorLido;
             return true;
         }
@@ -360,11 +356,6 @@ class VaporStudio {
             int qtd = lerInteiro("\nQuantidade da venda: ", 1, quantidadeMaxima);
             float precoUnitario = jogoVendido->calcularPrecoFinal();
             float valorTotalDaVenda = precoUnitario * qtd;
-            if (!std::isfinite(valorTotalDaVenda) ||
-                !std::isfinite(Jogo::ganhosTotais + valorTotalDaVenda)) {
-                std::cout << "A venda excede o limite numérico permitido.\n";
-                return;
-            }
             
             Jogo::ganhosTotais += valorTotalDaVenda;
             jogoVendido->adicionarCopiasVendidas(qtd);

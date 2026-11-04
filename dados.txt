@@ -19,7 +19,7 @@ The Witcher 3: Wild Hunt
 REDengine
 C++
 CD Projekt Red
-Pol¢nia
+Polï¿½nia
 3.5e+007
 1
 AAA
@@ -30,7 +30,7 @@ CyberPunk 2077
 REDengine
 4
 CD Projekt Red
-Pol¢nia
+Polï¿½nia
 1.5e+008
 3
 INDIE
@@ -41,7 +41,7 @@ Hollow Knight
 Unity
 C#
 Team Cherry
-Austr lia
+Austrï¿½lia
 Ari Gibson
 0
 INDIE
@@ -73,5 +73,5 @@ Candy Crush Saga
 Defold
 C++
 King
-Su‚cia
+Suï¿½cia
 1

@@ -4,6 +4,10 @@
 #include <cstdlib>
 #include <vector>
 #include <fstream>
+#include <cmath>
+#include <limits>
+#include <sstream>
+#include <stdexcept>
 #include "engine.h"
 #include "desenvolvedor.h"
 #include "jogo.h"
@@ -16,8 +20,71 @@ std::string traco = "-----------------------------";
 class VaporStudio {
     private:
         std::vector<Jogo*> catalogoJogos;
+
+        static std::string lerLinha(const std::string& prompt) {
+            std::cout << prompt;
+            std::string entrada;
+            if (!std::getline(std::cin, entrada)) {
+                throw std::runtime_error("Entrada encerrada.");
+            }
+            return entrada;
+        }
+
+        static bool converterInteiro(const std::string& entrada, int& valor, int minimo, int maximo) {
+            std::istringstream stream(entrada);
+            int valorLido;
+            if (!(stream >> valorLido)) return false;
+            stream >> std::ws;
+            if (!stream.eof() || valorLido < minimo || valorLido > maximo) return false;
+            valor = valorLido;
+            return true;
+        }
+
+        static bool converterFloat(const std::string& entrada, float& valor, float minimo) {
+            std::istringstream stream(entrada);
+            float valorLido;
+            if (!(stream >> valorLido)) return false;
+            stream >> std::ws;
+            if (!stream.eof() || !std::isfinite(valorLido) || valorLido < minimo) return false;
+            valor = valorLido;
+            return true;
+        }
+
+        static int lerInteiro(const std::string& prompt, int minimo, int maximo) {
+            while (true) {
+                int valor;
+                if (converterInteiro(lerLinha(prompt), valor, minimo, maximo)) return valor;
+                std::cout << "Entrada inválida. Digite um número entre " << minimo
+                          << " e " << maximo << ".\n";
+            }
+        }
+
+        static float lerFloat(const std::string& prompt, float minimo) {
+            while (true) {
+                float valor;
+                if (converterFloat(lerLinha(prompt), valor, minimo)) return valor;
+                std::cout << "Entrada inválida. Digite um número maior ou igual a "
+                          << minimo << ".\n";
+            }
+        }
+
+        static bool textoValido(const std::string& texto) {
+            return texto.find_first_not_of(" \t\r\n") != std::string::npos;
+        }
+
+        static std::string lerTexto(const std::string& prompt) {
+            while (true) {
+                std::string entrada = lerLinha(prompt);
+                if (textoValido(entrada)) return entrada;
+                std::cout << "O texto não pode ficar vazio.\n";
+            }
+        }
     
     public:
+        static int lerOpcao(const std::string& prompt, int minimo, int maximo) {
+            return lerInteiro(prompt, minimo, maximo);
+        }
+
         void menu(){
             system("cls");
             std::cout << "\n";
@@ -52,28 +119,18 @@ class VaporStudio {
 
             int id = Jogo::qtdJogosTotal;
 
-            std::cout << "Nome do jogo: ";
-            std::cin.ignore();
-            std::string nm;
-            std::getline(std::cin, nm);
+            std::string nm = lerTexto("Nome do jogo: ");
 
-            std::cout << "Preço base: ";
-            float preco;
-            std::cin >> preco;
+            float preco = lerFloat("Preço base: ", 0.0f);
 
-            std::cout << "Ano de lançamento: ";
-            int ano;
-            std::cin >> ano;
+            int ano = lerInteiro("Ano de lançamento: ", 1950, 2026);
 
             std::cout << "\nEscolha a Engine:\n";
             std::cout << "1. Unreal Engine 5 (C++)\n";
             std::cout << "2. Unity (C#)\n";
             std::cout << "3. Godot (GDScript/C++)\n";
             std::cout << "4. Engine própria (Digitar)\n";
-            std::cout << "Opção: ";
-
-            int opEngine;
-            std::cin >> opEngine;
+            int opEngine = lerInteiro("Opção: ", 1, 4);
             Engine eng("", "");
             if(opEngine == 1) {
                 eng = Engine("Unreal Engine 5", "C++");
@@ -81,59 +138,37 @@ class VaporStudio {
                 eng = Engine("Unity", "C#");
             }else if(opEngine == 3){
                 eng = Engine("Godot", "GDScript");
-            } else {
-                std::cout << "Nome da Engine: ";
-                std::string nomeEng;
-                std::cin >> nomeEng;
-                std::cout << "Linguagem base: ";
-                std::string langEng;
-                std::cin >> langEng;
+            } else if (opEngine == 4) {
+                std::string nomeEng = lerTexto("Nome da Engine: ");
+                std::string langEng = lerTexto("Linguagem base: ");
                 eng = Engine(nomeEng, langEng);
             }
 
             std::cout << "\n--- Dados da Desenvolvedora ---\n";
-            std::cout << "Nome da desenvolvedora: ";
-            std::cin.ignore();
-            std::string nomeDev;
-            std::getline(std::cin, nomeDev);
-            
-            std::cout << "País de origem: ";
-            std::string paisDev;
-            std::getline(std::cin, paisDev);
+            std::string nomeDev = lerTexto("Nome da desenvolvedora: ");
+            std::string paisDev = lerTexto("País de origem: ");
 
             Desenvolvedor dev(nomeDev, paisDev);
 
-            std::cout << "\nTipo (1 - AAA | 2 - Indie | 3 - Mobile): ";
-            int tipoJogo;
-            std::cin >> tipoJogo;
+            int tipoJogo = lerInteiro("\nTipo (1 - AAA | 2 - Indie | 3 - Mobile): ", 1, 3);
 
             if(tipoJogo == 1) {
-                std::cout << "Orçamento do marketing: R$ ";
-                float marketing;
-                std::cin >> marketing;
-                std::cout << "Quantidade de estúdios envolvidos: ";
-                int qtdE;
-                std::cin >> qtdE;
+                float marketing = lerFloat("Orçamento do marketing: R$ ", 0.0f);
+                int qtdE = lerInteiro("Quantidade de estúdios envolvidos: ", 1,
+                                      std::numeric_limits<int>::max());
             
                 catalogoJogos.push_back(new JogoAAA(
                     id, nm, preco, ano, eng, dev, marketing, qtdE
                 ));
             }else if(tipoJogo == 2){
-                std::cout << "Nome do desenvolvedor principal: ";
-                std::cin.ignore();
-                std::string devPrincipal;
-                std::getline(std::cin, devPrincipal);
-                std::cout << "Possui publisher? (1 - Sim / 0 - Não): ";
-                bool publisher;
-                std::cin >> publisher;
+                std::string devPrincipal = lerTexto("Nome do desenvolvedor principal: ");
+                bool publisher = lerInteiro("Possui publisher? (1 - Sim / 0 - Não): ", 0, 1) == 1;
 
                 catalogoJogos.push_back(new JogoIndie(
                     id, nm, preco, ano, eng, dev, devPrincipal, publisher
                 ));
             } else {
-                std::cout << "Possui anúncios? (1 - Sim / 0 - Não): ";
-                bool anuncios;
-                std::cin >> anuncios;
+                bool anuncios = lerInteiro("Possui anúncios? (1 - Sim / 0 - Não): ", 0, 1) == 1;
 
                 catalogoJogos.push_back(new JogoMobile(
                     id, nm, preco, ano, eng, dev, anuncios
@@ -163,6 +198,8 @@ class VaporStudio {
         }
 
         int pesquisar(std::string titulo) {
+            if (titulo.find_first_not_of(" \t\r\n") == std::string::npos) return -1;
+
             std::vector<int> indicesEncontrados;
 
             for(size_t i = 0; i < catalogoJogos.size(); i++){
@@ -178,23 +215,21 @@ class VaporStudio {
             }
 
             std::cout << "Múltiplos jogos encontrados:\n";
-            for (int idx : indicesEncontrados) {
-                std::cout << "[" << idx << "] " << catalogoJogos[idx]->getTitulo() << "\n";
+            for (size_t i = 0; i < indicesEncontrados.size(); i++) {
+                std::cout << "[" << i + 1 << "] "
+                          << catalogoJogos[indicesEncontrados[i]]->getTitulo() << "\n";
             }
             
-            int escolha;
-            std::cout << "Digite o índice desejado: ";
-            std::cin >> escolha;
-            return escolha;
+            int escolha = lerInteiro("Digite o índice desejado: ", 1,
+                                     static_cast<int>(indicesEncontrados.size()));
+            return indicesEncontrados[escolha - 1];
         }
 
         void exibirUmJogo() {
             system("cls");
             std::cout << traco << std::endl;
             std::cout << "Exibir Detalhes do Jogo" << std::endl;
-            std::cout << "Digite o nome do jogo: ";
-            std::string nomeP;
-            std::getline(std::cin >> std::ws, nomeP);
+            std::string nomeP = lerTexto("Digite o nome do jogo: ");
 
             int idJogo = pesquisar(nomeP);
             if (idJogo != -1) {
@@ -202,7 +237,7 @@ class VaporStudio {
                 catalogoJogos[idJogo]->exibirInfo();
                 std::cout << traco << std::endl;
             } else {
-                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                std::cout << "Nenhum jogo encontrado com esse nome.\n";
             }
             system("pause");
         }
@@ -212,15 +247,13 @@ class VaporStudio {
             std::cout << "Editar Jogo" << std::endl;
             std::cout << traco << std::endl;
 
-            std::cout << "Digite o nome do jogo que \ndeseja editar.\n"; 
-            std::cin.ignore();
-            std::string nomeP;
-            std::getline(std::cin, nomeP);
+            std::string nomeP = lerTexto("Digite o nome do jogo que deseja editar: ");
 
             int idJogo;
             idJogo = pesquisar(nomeP);
             if (idJogo == -1) {
-                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                std::cout << "Nenhum jogo encontrado com esse nome.\n";
+                system("pause");
                 return; 
             }
 
@@ -232,21 +265,35 @@ class VaporStudio {
             std::string entrada;
 
             std::cout << "Nome do jogo [" << catalogoJogos[idJogo]->getTitulo() << "]: ";
-            std::getline(std::cin, entrada);
+            if (!std::getline(std::cin, entrada)) throw std::runtime_error("Entrada encerrada.");
             if (!entrada.empty()) {
+                while (!textoValido(entrada)) {
+                    std::cout << "O texto não pode ficar vazio.\n";
+                    if (!std::getline(std::cin, entrada)) throw std::runtime_error("Entrada encerrada.");
+                }
                 catalogoJogos[idJogo]->setTitulo(entrada);
             }
 
             std::cout << "Preço Base [" << catalogoJogos[idJogo]->getPrecoBase() << "]: ";
-            std::getline(std::cin, entrada);
+            if (!std::getline(std::cin, entrada)) throw std::runtime_error("Entrada encerrada.");
             if (!entrada.empty()) {
-                catalogoJogos[idJogo]->setPrecoBase(std::stof(entrada));
+                float preco;
+                while (!converterFloat(entrada, preco, 0.0f)) {
+                    std::cout << "Preço inválido. Digite um valor maior ou igual a 0: ";
+                    if (!std::getline(std::cin, entrada)) throw std::runtime_error("Entrada encerrada.");
+                }
+                catalogoJogos[idJogo]->setPrecoBase(preco);
             }
 
             std::cout << "Ano de Lançamento [" << catalogoJogos[idJogo]->getAnoLancamento() << "]: ";
-            std::getline(std::cin, entrada);
+            if (!std::getline(std::cin, entrada)) throw std::runtime_error("Entrada encerrada.");
             if (!entrada.empty()) {
-                catalogoJogos[idJogo]->setAnoLancamento(std::stoi(entrada));
+                int ano;
+                while (!converterInteiro(entrada, ano, 1950, 2026)) {
+                    std::cout << "Ano inválido. Digite um ano entre 1950 e 2026: ";
+                    if (!std::getline(std::cin, entrada)) throw std::runtime_error("Entrada encerrada.");
+                }
+                catalogoJogos[idJogo]->setAnoLancamento(ano);
             }
 
             std::cout << "\nJogo atualizado com sucesso!\n";
@@ -260,15 +307,13 @@ class VaporStudio {
             std::cout << "Deletar Jogo" << std::endl;
             std::cout << traco << std::endl;
 
-            std::cout << "Digite o nome do jogo que\n deseja deletar\n"; 
-            std::cin.ignore();
-            std::string nomeP;
-            std::getline(std::cin, nomeP);
+            std::string nomeP = lerTexto("Digite o nome do jogo que deseja deletar: ");
 
             int idJogo;
             idJogo = pesquisar(nomeP);
             if (idJogo == -1) {
-                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                std::cout << "Nenhum jogo encontrado com esse nome.\n";
+                system("pause");
                 return; 
             }
 
@@ -277,9 +322,8 @@ class VaporStudio {
             catalogoJogos[idJogo]->exibirInfo();
             std::cout << traco << std::endl;
 
-            std::cout << "Tem a certeza absoluta que deseja remover este jogo? (1 - Sim / 0 - Nao): ";
-            int confirmacao;
-            std::cin >> confirmacao;
+            int confirmacao = lerInteiro(
+                "Tem a certeza absoluta que deseja remover este jogo? (1 - Sim / 0 - Nao): ", 0, 1);
             
             if(confirmacao){
                 delete catalogoJogos[idJogo];
@@ -296,26 +340,31 @@ class VaporStudio {
             std::cout << "Vender Jogo" << std::endl;
             std::cout << traco << std::endl;
 
-            std::cout << "Digite o nome do jogo que\n deseja vender\n"; 
-            std::cin.ignore();
-            std::string nomeP;
-            std::getline(std::cin, nomeP);
+            std::string nomeP = lerTexto("Digite o nome do jogo que deseja vender: ");
 
             int indexVetor = pesquisar(nomeP);
             
             if (indexVetor == -1) {
-                std::cout << "Erro: Nenhum jogo encontrado com esse nome.\n";
+                std::cout << "Nenhum jogo encontrado com esse nome.\n";
+                system("pause");
                 return; 
             }
 
-            std::cout << "\nQuantidade da venda: \n";
-            int qtd;
-            std::cin >> qtd;
-
             Jogo* jogoVendido = catalogoJogos[indexVetor];
-            
+            int quantidadeMaxima = std::numeric_limits<int>::max() - jogoVendido->getCopiasVendidas();
+            if (quantidadeMaxima < 1) {
+                std::cout << "Este jogo atingiu o limite de cópias vendidas.\n";
+                return;
+            }
+
+            int qtd = lerInteiro("\nQuantidade da venda: ", 1, quantidadeMaxima);
             float precoUnitario = jogoVendido->calcularPrecoFinal();
             float valorTotalDaVenda = precoUnitario * qtd;
+            if (!std::isfinite(valorTotalDaVenda) ||
+                !std::isfinite(Jogo::ganhosTotais + valorTotalDaVenda)) {
+                std::cout << "A venda excede o limite numérico permitido.\n";
+                return;
+            }
             
             Jogo::ganhosTotais += valorTotalDaVenda;
             jogoVendido->adicionarCopiasVendidas(qtd);
@@ -440,54 +489,97 @@ class VaporStudio {
             std::string linha;
 
             if (std::getline(lista, linha)) {
-                Jogo::ganhosTotais = std::stof(linha);
+                float ganhos;
+                if (converterFloat(linha, ganhos, 0.0f)) {
+                    Jogo::ganhosTotais = ganhos;
+                } else {
+                    std::cout << "Faturamento inválido no arquivo; usando zero.\n";
+                }
             }
             if (std::getline(lista, linha)) {
-                Jogo::downloadsTotais = std::stof(linha);
+                int downloads;
+                if (converterInteiro(linha, downloads, 0, std::numeric_limits<int>::max())) {
+                    Jogo::downloadsTotais = downloads;
+                } else {
+                    std::cout << "Total de downloads inválido no arquivo; usando zero.\n";
+                }
             }
 
             while (std::getline(lista, linha)) {
-                if (linha == "AAA" || linha == "INDIE" || linha == "MOBILE") {
-                    std::string idStr, titulo, precoStr, anoStr;
-                    std::string nomeEng, langEng, nomeDev, paisDev;
+                if (linha.empty()) continue;
+                if (linha != "AAA" && linha != "INDIE" && linha != "MOBILE") {
+                    std::cout << "Tipo de jogo inválido no arquivo; linha ignorada.\n";
+                    continue;
+                }
 
-                    std::getline(lista, idStr);
-                    std::getline(lista, titulo);
-                    std::getline(lista, precoStr);
-                    std::getline(lista, anoStr);
-                    std::getline(lista, nomeEng);
-                    std::getline(lista, langEng);
-                    std::getline(lista, nomeDev);
-                    std::getline(lista, paisDev);
+                std::string idStr, titulo, precoStr, anoStr;
+                std::string nomeEng, langEng, nomeDev, paisDev;
+                if (!std::getline(lista, idStr) || !std::getline(lista, titulo) ||
+                    !std::getline(lista, precoStr) || !std::getline(lista, anoStr) ||
+                    !std::getline(lista, nomeEng) || !std::getline(lista, langEng) ||
+                    !std::getline(lista, nomeDev) || !std::getline(lista, paisDev)) {
+                    std::cout << "Registro incompleto no arquivo; carregamento interrompido.\n";
+                    break;
+                }
 
-                    int id = std::stoi(idStr);
-                    float preco = std::stof(precoStr);
-                    int ano = std::stoi(anoStr);
-
-                    Engine eng(nomeEng, langEng);
-                    Desenvolvedor dev(nomeDev, paisDev);
-
-                    if (linha == "AAA") {
-                        std::string orcamentoStr, qtdEstudiosStr;
-                        std::getline(lista, orcamentoStr);
-                        std::getline(lista, qtdEstudiosStr);
-                        
-                        catalogoJogos.push_back(new JogoAAA(id, titulo, preco, ano, eng, dev, 
-                            std::stof(orcamentoStr), std::stoi(qtdEstudiosStr)));
-                    } else if (linha == "INDIE") {
-                        std::string nomeDevPrincipal, publisherStr;
-                        std::getline(lista, nomeDevPrincipal);
-                        std::getline(lista, publisherStr);
-                        
-                        catalogoJogos.push_back(new JogoIndie(id, titulo, preco, ano, eng, dev, 
-                            nomeDevPrincipal, std::stoi(publisherStr)));
-                    } else if (linha == "MOBILE") {
-                        std::string anunciosStr;
-                        std::getline(lista, anunciosStr);
-                        
-                        catalogoJogos.push_back(new JogoMobile(id, titulo, preco, ano, eng, dev, 
-                            std::stoi(anunciosStr)));
+                std::string dadoEspecifico1, dadoEspecifico2;
+                if (linha == "AAA") {
+                    if (!std::getline(lista, dadoEspecifico1) ||
+                        !std::getline(lista, dadoEspecifico2)) {
+                        std::cout << "Registro incompleto no arquivo; carregamento interrompido.\n";
+                        break;
                     }
+                } else if (linha == "INDIE") {
+                    if (!std::getline(lista, dadoEspecifico1) ||
+                        !std::getline(lista, dadoEspecifico2)) {
+                        std::cout << "Registro incompleto no arquivo; carregamento interrompido.\n";
+                        break;
+                    }
+                } else if (!std::getline(lista, dadoEspecifico1)) {
+                    std::cout << "Registro incompleto no arquivo; carregamento interrompido.\n";
+                    break;
+                }
+
+                int id, ano;
+                float preco;
+                bool valido = converterInteiro(idStr, id, 0, std::numeric_limits<int>::max()) &&
+                    converterFloat(precoStr, preco, 0.0f) &&
+                    converterInteiro(anoStr, ano, 1950, 2026) &&
+                    textoValido(titulo) && textoValido(nomeEng) && textoValido(langEng) &&
+                    textoValido(nomeDev) && textoValido(paisDev);
+
+                Engine eng(nomeEng, langEng);
+                Desenvolvedor dev(nomeDev, paisDev);
+                if (linha == "AAA") {
+                    float marketing;
+                    int qtdEstudios;
+                    valido = valido &&
+                        converterFloat(dadoEspecifico1, marketing, 0.0f) &&
+                        converterInteiro(dadoEspecifico2, qtdEstudios, 1,
+                                         std::numeric_limits<int>::max());
+                    if (valido) {
+                        catalogoJogos.push_back(new JogoAAA(
+                            id, titulo, preco, ano, eng, dev, marketing, qtdEstudios));
+                    }
+                } else if (linha == "INDIE") {
+                    int publisher;
+                    valido = valido && textoValido(dadoEspecifico1) &&
+                        converterInteiro(dadoEspecifico2, publisher, 0, 1);
+                    if (valido) {
+                        catalogoJogos.push_back(new JogoIndie(
+                            id, titulo, preco, ano, eng, dev, dadoEspecifico1, publisher == 1));
+                    }
+                } else {
+                    int anuncios;
+                    valido = valido && converterInteiro(dadoEspecifico1, anuncios, 0, 1);
+                    if (valido) {
+                        catalogoJogos.push_back(new JogoMobile(
+                            id, titulo, preco, ano, eng, dev, anuncios == 1));
+                    }
+                }
+
+                if (!valido) {
+                    std::cout << "Registro inválido no arquivo; jogo ignorado.\n";
                 }
             }
 

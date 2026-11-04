@@ -5,15 +5,6 @@
 int main() {
     SetConsoleOutputCP(CP_UTF8);
 
-    std::cout << "\n\n";
-    std::cout << "  ##     ##  ######  ######   ######   ######  \n";
-    std::cout << "  ##     ## ##    ## ##   ## ##    ## ##    ## \n";
-    std::cout << "  ##     ## ######## ##   ## ##    ## ##    ## \n";
-    std::cout << "   ##   ##  ##    ## ######  ##    ## ######   \n";
-    std::cout << "    ## ##   ##    ## ##      ##    ## ##   ##  \n";
-    std::cout << "     ###    ##    ## ##       ######  ##    ## \n";
-    std::cout << "                  S T U D I O\n\n";
-
     VaporStudio vapor;
 
     vapor.carregarArquivo();
@@ -21,8 +12,7 @@ int main() {
     int op = -1;
     while(op != 0){
         vapor.menu();
-        std::cout << "Opção: ";
-        std::cin >> op;
+        op = VaporStudio::lerOpcao("Opção: ", 0, 7);
 
         switch (op)
         {
@@ -47,12 +37,11 @@ int main() {
         case 7:
             vapor.exibirUmJogo();
             break;
-        case 0: 
-            std::cout << "Encerrando o VaporStudio...\n"; 
+        case 0:
+            std::cout << "Encerrando o VaporStudio...\n";
             break;
-        default: 
-            std::cout << "Opção inválida! Tente novamente.\n";
-            system("pause");
+        default:
+            break;
         }
     }
 
